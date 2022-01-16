@@ -1,4 +1,5 @@
 use rand::Rng;
+use std::cmp;
 use std::cmp::Ordering;
 use std::io;
 // run `cargo doc --open` to generate browser executable docs for crates being used
@@ -20,11 +21,11 @@ fn main() {
   
   // convert number string "guess" to numeric value?\
   let mut guess_number: u32 = guess_string.trim().parse().expect("Unable to cast string to unsigned integer");
-
+  let mut difference: u32 = cmp::max(guess_number, secret_number) - cmp::min(guess_number, secret_number);
   // this comparison cmp function can return either of the below Ordering enum types.
   match guess_number.cmp(&secret_number) {
-    Ordering::Less => println!("\nYour guess: {}, is too low.\nThe secret number was: {}", guess_number, secret_number),
-    Ordering::Greater => println!("\nYour guess: {}, is too high.\nThe secret number was: {}", guess_number, secret_number),
+    Ordering::Less => println!("\nYour guess: {}, is too low.\nYou are: {} away", guess_number, difference),
+    Ordering::Greater => println!("\nYour guess: {}, is too high.\nYou are: {} away", guess_number, difference),
     Ordering::Equal => println!("\nYour guess: {}, is CORRECT!!!", guess_number),
   }
 
@@ -39,10 +40,12 @@ fn main() {
       .expect("Failed to read line");
 
     guess_number = guess_string.trim().parse().expect("Unable to cast string to unsigned integer");
+    difference = cmp::max(guess_number, secret_number) - cmp::min(guess_number, secret_number);
+
     if (guess_number < secret_number) {
-      println!("Your guess: {}, is too low.\nThe secret number was: {}", guess_number, secret_number);
+      println!("Your guess: {}, is too low.\nYou are: {} away", guess_number, difference);
     } else if (guess_number > secret_number) {
-      println!("Your guess: {}, is too high.\nThe secret number was: {}", guess_number, secret_number);
+      println!("Your guess: {}, is too high.\nYou are: {} away", guess_number, difference);
     } else {
       println!("Your guess: {}, is CORRECT!!!", guess_number);
     }
